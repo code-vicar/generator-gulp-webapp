@@ -9,6 +9,11 @@ module.exports = yeoman.generators.Base.extend({
   constructor: function () {
     yeoman.generators.Base.apply(this, arguments);
 
+    this.option('server-config', {
+      desc: 'Option to turn on server config generation',
+      type: String
+    });
+
     this.option('test-framework', {
       desc: 'Test framework to be invoked',
       type: String,
@@ -33,6 +38,17 @@ module.exports = yeoman.generators.Base.extend({
 
   initializing: function () {
     this.pkg = require('../package.json');
+
+    var validOptions = ['apache','gae','iis','lighttpd','nginx','node'];
+    var choice = this.server_config = this.options['server-config'];
+    if ( validOptions.some(function (validOption) { return choice === validOption; }) ) {
+      this.composeWith('server-configs', {
+        args: [choice],
+        options: { destination: 'server_config' } // send server configs to their respective folders (instead of root)
+      }, {
+        local: require.resolve('generator-server-configs')
+      });
+    }
   },
 
   prompting: function () {
@@ -59,16 +75,10 @@ module.exports = yeoman.generators.Base.extend({
         value: 'includeModernizr',
         checked: true
       }]
-    }, {
-      type: 'confirm',
-      name: 'serverConfigs',
-      message: 'Generate server configs?',
-      default: false
     }];
 
     this.prompt(prompts, function (answers) {
       var features = answers.features;
-      var serverConfigs = answers.serverConfigs;
 
       var hasFeature = function (feat) {
         return features.indexOf(feat) !== -1;
@@ -80,13 +90,6 @@ module.exports = yeoman.generators.Base.extend({
       this.includeBootstrap = hasFeature('includeBootstrap');
       this.includeModernizr = hasFeature('includeModernizr');
 
-      if ( serverConfigs === true ) {
-        this.composeWith('server-configs', {
-          options: { destination: true } // send server configs to their respective folders (instead of root)
-        }, {
-          local: require.resolve('generator-server-configs')
-        });
-      }
       done();
     }.bind(this));
   },
