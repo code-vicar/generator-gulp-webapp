@@ -81,15 +81,14 @@ module.exports = yeoman.generators.Base.extend({
       this.includeBootstrap = hasFeature('includeBootstrap');
       this.includeModernizr = hasFeature('includeModernizr');
 
-      if (serverConfigs === true) {
+      if ( serverConfigs === true ) {
         this.composeWith('server-configs', {
-          options: {namespace: true} // send server configs to their respective folders (instead of root)
+          options: { destination: true } // send server configs to their respective folders (instead of root)
         }, {
           local: require.resolve('generator-server-configs')
         });
-      } else {
-        done();
       }
+      done();
     }.bind(this));
   },
 
