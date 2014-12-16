@@ -1,6 +1,5 @@
 'use strict';
-// var fs = require('fs');
-// var path = require('path');
+
 var yeoman = require('yeoman-generator');
 var yosay = require('yosay');
 var chalk = require('chalk');
@@ -39,7 +38,7 @@ module.exports = yeoman.generators.Base.extend({
   prompting: function () {
     var done = this.async();
 
-    if (!this.options['skip-welcome-message']) {
+    if ( !this.options['skip-welcome-message'] ) {
       this.log(yosay('\'Allo \'allo! Out of the box I include HTML5 Boilerplate, jQuery, and a gulpfile.js to build your app.'));
     }
 
@@ -93,34 +92,34 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writing: {
-    gulpfile: function() {
+    gulpfile: function () {
       this.template('gulpfile.js');
     },
 
-    packageJSON: function() {
+    packageJSON: function () {
       this.template('_package.json', 'package.json');
     },
 
-    git: function() {
+    git: function () {
       this.copy('gitignore', '.gitignore');
       this.copy('gitattributes', '.gitattributes');
     },
 
-    bower: function() {
+    bower: function () {
       var bower = {
         name: this._.slugify(this.appname),
         private: true,
         dependencies: {}
       };
 
-      if (this.includeBootstrap) {
+      if ( this.includeBootstrap ) {
         var bs = 'bootstrap' + (this.includeSass ? '-sass-official' : '');
         bower.dependencies[bs] = '~3.3.1';
       } else {
         bower.dependencies.jquery = '~2.1.1';
       }
 
-      if (this.includeModernizr) {
+      if ( this.includeModernizr ) {
         bower.dependencies.modernizr = '~2.8.1';
       }
 
@@ -144,7 +143,7 @@ module.exports = yeoman.generators.Base.extend({
     mainStylesheet: function () {
       var css = 'main';
 
-      if (this.includeSass) {
+      if ( this.includeSass ) {
         css += '.scss';
       } else {
         css += '.css';
@@ -158,10 +157,10 @@ module.exports = yeoman.generators.Base.extend({
       this.indexFile = this.engine(this.indexFile, this);
 
       // wire Bootstrap plugins
-      if (this.includeBootstrap) {
+      if ( this.includeBootstrap ) {
         var bs = '../bower_components/';
 
-        if (this.includeSass) {
+        if ( this.includeSass ) {
           bs += 'bootstrap-sass-official/assets/javascripts/bootstrap/';
         } else {
           bs += 'bootstrap/js/';
@@ -212,7 +211,7 @@ module.exports = yeoman.generators.Base.extend({
       chalk.yellow.bold('gulp wiredep') +
       '.';
 
-    if (this.options['skip-install']) {
+    if ( this.options['skip-install'] ) {
       this.log(howToInstall);
       return;
     }
@@ -233,7 +232,7 @@ module.exports = yeoman.generators.Base.extend({
         src: 'app/index.html'
       });
 
-      if (this.includeSass) {
+      if ( this.includeSass ) {
         // wire Bower packages to .scss
         wiredep({
           bowerJson: bowerJson,
