@@ -1,6 +1,6 @@
 'use strict';
-var fs = require('fs');
-var path = require('path');
+// var fs = require('fs');
+// var path = require('path');
 var yeoman = require('yeoman-generator');
 var yosay = require('yosay');
 var chalk = require('chalk');
@@ -60,10 +60,16 @@ module.exports = yeoman.generators.Base.extend({
         value: 'includeModernizr',
         checked: true
       }]
+    }, {
+      type: 'confirm',
+      name: 'serverConfigs',
+      message: 'Generate server configs?',
+      default: false
     }];
 
     this.prompt(prompts, function (answers) {
       var features = answers.features;
+      var serverConfigs = answers.serverConfigs;
 
       var hasFeature = function (feat) {
         return features.indexOf(feat) !== -1;
@@ -75,7 +81,15 @@ module.exports = yeoman.generators.Base.extend({
       this.includeBootstrap = hasFeature('includeBootstrap');
       this.includeModernizr = hasFeature('includeModernizr');
 
-      done();
+      if (serverConfigs === true) {
+        this.composeWith('server-configs', {
+          options: {namespace: true} // send server configs to their respective folders (instead of root)
+        }, {
+          local: require.resolve('generator-server-configs')
+        });
+      } else {
+        done();
+      }
     }.bind(this));
   },
 
